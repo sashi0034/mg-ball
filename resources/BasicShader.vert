@@ -1,18 +1,16 @@
 layout (location = 0) in vec4 position;
 layout (location = 1) in vec2 textureCoordinates;
 
-// 0
-uniform mat4 transformationMat;
-// 1
-uniform mat4 projectionMat;
+uniform highp mat4 projectionMat;
+uniform highp mat4 transformationMat;
 
 out vec2 interpolatedTexCoord;
-// out vec3 transformedPos;
+out vec3 transformedPos;
 
 void main() {
     // calculate position
     vec4 transformedPos4 = transformationMat * position;
-    // transformedPos = transformedPos4.xyz / transformedPos4.w;
+    transformedPos = transformedPos4.xyz / transformedPos4.w;
 
     gl_Position = projectionMat * transformedPos4;
 

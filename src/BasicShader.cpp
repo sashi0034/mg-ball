@@ -25,5 +25,8 @@ namespace MgBall
         attachShaders({vert, frag});
 
         CORRADE_INTERNAL_ASSERT_OUTPUT(link());
+        
+        uniform_transformationMat = uniformLocation("transformationMat");
+        uniform_projectionMat = uniformLocation("projectionMat");
     }
 }

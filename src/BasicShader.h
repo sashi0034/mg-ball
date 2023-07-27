@@ -19,13 +19,13 @@ namespace MgBall
 
         BasicShader& setTransformationMat(const Matrix4& matrix)
         {
-            setUniform(transformationMat, matrix);
+            setUniform(uniform_transformationMat, matrix);
             return *this;
         }
 
         BasicShader& setProjectionMat(const Matrix4& matrix)
         {
-            setUniform(projectionMat, matrix);
+            setUniform(uniform_projectionMat, matrix);
             return *this;
         }
         
@@ -36,12 +36,8 @@ namespace MgBall
         }
 
     private:
-        enum UniformVert: Int
-        {
-            transformationMat,
-            projectionMat,
-            interpolatedTexCoord
-        };
+        Int uniform_transformationMat{};
+        Int uniform_projectionMat{};
 
         enum UniformFrag: Int
         {

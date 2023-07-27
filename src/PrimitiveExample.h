@@ -58,14 +58,6 @@ namespace MgBall
 
     inline void PrimitivesExample::drawEvent()
     {
-        _shader2.setLightPositions({{1.4f, 1.0f, 0.75f, 0.0f}})
-               .setDiffuseColor(_color)
-               .setAmbientColor(Color3::fromHsv({_color.hue(), 1.0f, 0.3f}))
-               .setTransformationMatrix(_transformation)
-               // .setNormalMatrix(_transformation.normalMatrix())
-               .setProjectionMatrix(_projection)
-               .draw(_mesh);
-        
         _shader.setTransformationMat(_transformation)
                .setProjectionMat(_projection)
                .draw(_mesh);
