@@ -3,9 +3,10 @@ find_package(Magnum REQUIRED GL Trade Sdl2Application)
 
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
-corrade_add_resource(APP_RESOURCES ../rsc/resources.conf)
+corrade_add_resource(APP_RESOURCES ../resources/resources.conf)
 
 add_executable(${PROJECT_NAME} WIN32
+    BasicShader.h BasicShader.cpp
     TexturedQuadExample.h
     PrimitiveExample.h
     TexturedQuadShader.h TexturedQuadShader.cpp

@@ -31,7 +31,7 @@ namespace MgBall
     {
         const auto path = Utility::Path::join(
             Utility::Path::split(Utility::Path::fromNativeSeparators(__FILE__)).first(),
-            "../rsc/resources.conf");
+            "../resources/resources.conf");
         Utility::Resource::overrideGroup("main-data", path);
 
         _texturedQuadExample = TexturedQuadExample{};
