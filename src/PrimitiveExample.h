@@ -38,6 +38,8 @@ namespace MgBall
         Matrix4 _transformation;
         Matrix4 _projection;
         Color3 _color;
+
+        static void setupMesh(GL::Mesh& mesh);
     };
 
     inline PrimitivesExample::PrimitivesExample(Vector2 windowSize)
@@ -45,7 +47,8 @@ namespace MgBall
         GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
         GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
 
-        _mesh = MeshTools::compile(Primitives::cubeSolid());
+        // _mesh = MeshTools::compile(Primitives::cubeSolid());
+        setupMesh(_mesh);
 
         _transformation =
             Matrix4::rotationX(30.0_degf) * Matrix4::rotationY(40.0_degf);
@@ -78,6 +81,46 @@ namespace MgBall
         // Z軸上で手前に移動
         const Vector3 translationVector(0.0f, 0.0f, (delta.y()));
         _transformation = Matrix4::translation(translationVector) * _transformation;
+    }
+
+    inline void PrimitivesExample::setupMesh(GL::Mesh& mesh)
+    {
+        /* 頂点データ */
+        struct Vertex
+        {
+            Vector3 position;
+        };
+
+        /* 頂点の位置 */
+        static const Vertex data[]{
+            {{-1.0f, -1.0f, -1.0f}},
+            {{1.0f, -1.0f, -1.0f}},
+            {{1.0f, 1.0f, -1.0f}},
+            {{-1.0f, 1.0f, -1.0f}},
+            {{-1.0f, -1.0f, 1.0f}},
+            {{1.0f, -1.0f, 1.0f}},
+            {{1.0f, 1.0f, 1.0f}},
+            {{-1.0f, 1.0f, 1.0f}}
+        };
+
+        /* インデックス */
+        UnsignedInt indices[] = {
+            0, 2, 1, 0, 3, 2, /* 前面 */
+            1, 2, 6, 1, 6, 5, /* 右面 */
+            7, 5, 6, 7, 4, 5, /* 後面 */
+            4, 3, 0, 4, 7, 3, /* 左面 */
+            3, 6, 2, 3, 7, 6, /* 上面 */
+            4, 1, 5, 4, 0, 1  /* 下面 */
+        };
+
+        GL::Buffer vertexBuffer, indexBuffer;
+
+        vertexBuffer.setData(data, GL::BufferUsage::StaticDraw);
+        indexBuffer.setData(indices, GL::BufferUsage::StaticDraw);
+
+        mesh.setCount(std::size(indices))
+            .addVertexBuffer(std::move(vertexBuffer), 0, Shaders::GenericGL3D::Position{})
+            .setIndexBuffer(std::move(indexBuffer), 0, GL::MeshIndexType::UnsignedInt);
     }
 }
 
