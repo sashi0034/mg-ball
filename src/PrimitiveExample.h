@@ -37,7 +37,7 @@ namespace MgBall
         PrimitivesExample() = default;
         explicit PrimitivesExample(Vector2 windowSize);
 
-        void drawEvent();
+        void drawEvent(const Vector3& translationVector);
         void mouseReleaseEvent();
         void mouseMoveEvent(Vector2 delta);
 
@@ -88,9 +88,9 @@ namespace MgBall
                 .setSubImage(0, {}, *textureImage);
     }
 
-    inline void PrimitivesExample::drawEvent()
+    inline void PrimitivesExample::drawEvent(const Vector3& translationVector)
     {
-        _shader.setTransformationMat(_transformation)
+        _shader.setTransformationMat(Matrix4::translation(translationVector) * _transformation)
                .setProjectionMat(_projection)
                .bindTexture(_texture)
                .draw(_mesh);
@@ -123,25 +123,47 @@ namespace MgBall
         };
 
         /* 頂点の位置 */
-        static constexpr Vertex data[]{
+        static const Vertex data[]{
+            /* 前面 */
             {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}},
             {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}},
             {{1.0f, 1.0f, -1.0f}, {1.0f, 1.0f}},
             {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f}},
-            {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f}},
+            /* 右面 */
+            {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}},
             {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f}},
             {{1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-            {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
+            {{1.0f, 1.0f, -1.0f}, {0.0f, 1.0f}},
+            /* 後面 */
+            {{1.0f, -1.0f, 1.0f}, {0.0f, 0.0f}},
+            {{-1.0f, -1.0f, 1.0f}, {1.0f, 0.0f}},
+            {{-1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+            {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+            /* 左面 */
+            {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f}},
+            {{-1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}},
+            {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f}},
+            {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+            /* 上面 */
+            {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f}},
+            {{1.0f, 1.0f, -1.0f}, {1.0f, 0.0f}},
+            {{1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+            /* 下面 */
+            {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f}},
+            {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f}},
+            {{1.0f, -1.0f, -1.0f}, {1.0f, 1.0f}},
+            {{-1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}},
         };
 
         /* インデックス */
         UnsignedInt indices[] = {
             0, 2, 1, 0, 3, 2, /* 前面 */
-            1, 2, 6, 1, 6, 5, /* 右面 */
-            7, 5, 6, 7, 4, 5, /* 後面 */
-            4, 3, 0, 4, 7, 3, /* 左面 */
-            3, 6, 2, 3, 7, 6, /* 上面 */
-            4, 1, 5, 4, 0, 1 /* 下面 */
+            4, 6, 5, 4, 7, 6, /* 右面 */
+            8, 10, 9, 8, 11, 10, /* 後面 */
+            12, 14, 13, 12, 15, 14, /* 左面 */
+            16, 18, 17, 16, 19, 18, /* 上面 */
+            20, 22, 21, 20, 23, 22  /* 下面 */
         };
 
         GL::Buffer vertexBuffer, indexBuffer;

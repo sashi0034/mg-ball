@@ -74,9 +74,9 @@ namespace MgBall
             Vector2 textureCoordinates;
         };
         constexpr QuadVertex vertices[]{
-            {{-0.2f, 0.6f}, {1.0f, 0.0f}}, /* Bottom right */
-            {{-0.2f, 1.0f}, {1.0f, 1.0f}}, /* Top right */
-            {{-1.0f, 0.6f}, {0.0f, 0.0f}}, /* Bottom left */
+            {{-0.0f, 0.0f}, {1.0f, 0.0f}}, /* Bottom right */
+            {{-0.0f, 1.0f}, {1.0f, 1.0f}}, /* Top right */
+            {{-1.0f, 0.0f}, {0.0f, 0.0f}}, /* Bottom left */
             {{-1.0f, 1.0f}, {0.0f, 1.0f}} /* Top left */
         };
 
@@ -138,14 +138,6 @@ namespace MgBall
 
     inline void TexturedQuadExample::drawEvent()
     {
-        // これがあるとα値を反映できるみたい
-        GL::Renderer::enable(GL::Renderer::Feature::Blending);
-        GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
-                                       GL::Renderer::BlendFunction::OneMinusSourceAlpha);
-
-
-        GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
-
         using namespace Math::Literals;
 
         _shader

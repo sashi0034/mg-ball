@@ -36,4 +36,6 @@ void main() {
     interpolatedTextureCoordinates = textureCoordinates;
 
     gl_Position = position;
+    gl_Position.z = 0.998;
+    gl_Position.w = 1;
 }

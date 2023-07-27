@@ -55,7 +55,8 @@ namespace MgBall
         GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
 
         _texturedQuadExample.drawEvent();
-        _primitivesExample.drawEvent();
+        _primitivesExample.drawEvent({0.5, 0, 0});
+        _primitivesExample.drawEvent({-0.5, 0, 0});
 
         swapBuffers();
     }
