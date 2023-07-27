@@ -9,6 +9,8 @@
 #include <Magnum/MeshTools/Compile.h>
 #include <Magnum/Primitives/Cube.h>
 #include <Magnum/Shaders/PhongGL.h>
+
+#include "BasicShader.h"
 #include "Magnum/Trade/MeshData.h"
 
 namespace MgBall
@@ -29,7 +31,9 @@ namespace MgBall
 
     private:
         GL::Mesh _mesh;
-        Shaders::PhongGL _shader;
+
+        BasicShader _shader;
+        Shaders::PhongGL _shader2;
 
         Matrix4 _transformation;
         Matrix4 _projection;
@@ -54,12 +58,16 @@ namespace MgBall
 
     inline void PrimitivesExample::drawEvent()
     {
-        _shader.setLightPositions({{1.4f, 1.0f, 0.75f, 0.0f}})
+        _shader2.setLightPositions({{1.4f, 1.0f, 0.75f, 0.0f}})
                .setDiffuseColor(_color)
                .setAmbientColor(Color3::fromHsv({_color.hue(), 1.0f, 0.3f}))
                .setTransformationMatrix(_transformation)
-               .setNormalMatrix(_transformation.normalMatrix())
+               // .setNormalMatrix(_transformation.normalMatrix())
                .setProjectionMatrix(_projection)
+               .draw(_mesh);
+        
+        _shader.setTransformationMat(_transformation)
+               .setProjectionMat(_projection)
                .draw(_mesh);
     }
 

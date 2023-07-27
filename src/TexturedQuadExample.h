@@ -48,6 +48,7 @@
 #include "Magnum/PixelFormat.h"
 #include "Magnum/GL/Framebuffer.h"
 #include "Magnum/GL/Renderbuffer.h"
+#include "Magnum/Platform/ScreenedApplication.h"
 
 namespace MgBall
 {
