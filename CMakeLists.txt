@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.4)
 set(PROJECT_NAME mg-ball)
 project(${PROJECT_NAME})
 
+set(CMAKE_CXX_STANDARD 20)
+
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 
 # Add Corrade as a subproject

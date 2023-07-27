@@ -6,6 +6,7 @@ set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 corrade_add_resource(APP_RESOURCES ../resources/resources.conf)
 
 add_executable(${PROJECT_NAME} WIN32
+    ConstParam.h
     BasicShader.h BasicShader.cpp
     TexturedQuadExample.h
     PrimitiveExample.h

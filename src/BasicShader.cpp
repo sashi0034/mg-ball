@@ -1,5 +1,6 @@
 ﻿#include "BasicShader.h"
 
+#include "ConstParam.h"
 #include "TexturedQuadShader.h"
 #include "Corrade/Utility/Resource.h"
 #include "Magnum/GL/Context.h"
@@ -12,7 +13,7 @@ namespace MgBall
     {
         MAGNUM_ASSERT_GL_VERSION_SUPPORTED(GL::Version::GL330);
 
-        const Utility::Resource rs{"main-data"};
+        const Utility::Resource rs{ConstParam::RscMgBall};
 
         GL::Shader vert{GL::Version::GL330, GL::Shader::Type::Vertex};
         GL::Shader frag{GL::Version::GL330, GL::Shader::Type::Fragment};

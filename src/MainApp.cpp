@@ -1,6 +1,7 @@
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/Platform/Sdl2Application.h>
 
+#include "ConstParam.h"
 #include "PrimitiveExample.h"
 #include "TexturedQuadExample.h"
 #include "Corrade/Utility/Path.h"
@@ -32,7 +33,7 @@ namespace MgBall
         const auto path = Utility::Path::join(
             Utility::Path::split(Utility::Path::fromNativeSeparators(__FILE__)).first(),
             "../resources/resources.conf");
-        Utility::Resource::overrideGroup("main-data", path);
+        Utility::Resource::overrideGroup(ConstParam::RscMgBall, path);
 
         _texturedQuadExample = TexturedQuadExample{};
         _primitivesExample = PrimitivesExample{Vector2{windowSize()}};

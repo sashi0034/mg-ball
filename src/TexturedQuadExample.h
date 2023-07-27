@@ -100,7 +100,7 @@ namespace MgBall
         PluginManager::Manager<Trade::AbstractImporter> manager;
         Containers::Pointer<Trade::AbstractImporter> importer =
             manager.loadAndInstantiate("TgaImporter");
-        const Utility::Resource rs{"main-data"};
+        const Utility::Resource rs{ConstParam::RscMgBall};
         if (!importer || !importer->openData(rs.getRaw("stone.tga")))
             std::exit(1);
 
