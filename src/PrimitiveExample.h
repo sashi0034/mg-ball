@@ -1,7 +1,6 @@
 ﻿#ifndef PRIMITIVEEXAMPLE_H
 #define PRIMITIVEEXAMPLE_H
 
-#include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/Math/Color.h>
@@ -11,7 +10,20 @@
 #include <Magnum/Shaders/PhongGL.h>
 
 #include "BasicShader.h"
-#include "Magnum/Trade/MeshData.h"
+#include "Corrade/PluginManager/Manager.h"
+#include "Corrade/Utility/Resource.h"
+#include "Magnum/GL/TextureFormat.h"
+#include "Magnum/Trade/AbstractImporter.h"
+#include "Magnum/Trade/ImageData.h"
+#include <Magnum/GL/Texture.h>
+#include <Corrade/Containers/Optional.h>
+#include <Corrade/Containers/StringView.h>
+#include <Magnum/ImageView.h>
+#include <Magnum/GL/Buffer.h>
+
+#include "Magnum/Magnum.h"
+#include "Magnum/PixelFormat.h"
+#include "Magnum/GL/Renderbuffer.h"
 
 namespace MgBall
 {
@@ -33,11 +45,11 @@ namespace MgBall
         GL::Mesh _mesh;
 
         BasicShader _shader;
-        Shaders::PhongGL _shader2;
 
         Matrix4 _transformation;
         Matrix4 _projection;
         Color3 _color;
+        GL::Texture2D _texture;
 
         static void setupMesh(GL::Mesh& mesh);
     };
@@ -57,12 +69,30 @@ namespace MgBall
                 35.0_degf, Vector2{windowSize}.aspectRatio(), 0.01f, 100.0f) *
             Matrix4::translation(Vector3::zAxis(-10.0f));
         _color = Color3::fromHsv({35.0_degf, 1.0f, 1.0f});
+
+        // load texture
+        PluginManager::Manager<Trade::AbstractImporter> manager;
+        Containers::Pointer<Trade::AbstractImporter> importer =
+            manager.loadAndInstantiate("TgaImporter");
+        const Utility::Resource rs{ConstParam::RscMgBall};
+        if (!importer || !importer->openData(rs.getRaw("stone.tga")))
+            std::exit(1);
+
+        Containers::Optional<Trade::ImageData2D> textureImage = importer->image2D(0);
+        CORRADE_INTERNAL_ASSERT(textureImage);
+
+        _texture.setWrapping(GL::SamplerWrapping::ClampToEdge)
+                .setMagnificationFilter(GL::SamplerFilter::Linear)
+                .setMinificationFilter(GL::SamplerFilter::Linear)
+                .setStorage(1, GL::textureFormat(textureImage->format()), textureImage->size())
+                .setSubImage(0, {}, *textureImage);
     }
 
     inline void PrimitivesExample::drawEvent()
     {
         _shader.setTransformationMat(_transformation)
                .setProjectionMat(_projection)
+               .bindTexture(_texture)
                .draw(_mesh);
     }
 
@@ -89,18 +119,19 @@ namespace MgBall
         struct Vertex
         {
             Vector3 position;
+            Vector2 textureCoord;
         };
 
         /* 頂点の位置 */
-        static const Vertex data[]{
-            {{-1.0f, -1.0f, -1.0f}},
-            {{1.0f, -1.0f, -1.0f}},
-            {{1.0f, 1.0f, -1.0f}},
-            {{-1.0f, 1.0f, -1.0f}},
-            {{-1.0f, -1.0f, 1.0f}},
-            {{1.0f, -1.0f, 1.0f}},
-            {{1.0f, 1.0f, 1.0f}},
-            {{-1.0f, 1.0f, 1.0f}}
+        static constexpr Vertex data[]{
+            {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}},
+            {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}},
+            {{1.0f, 1.0f, -1.0f}, {1.0f, 1.0f}},
+            {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f}},
+            {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f}},
+            {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f}},
+            {{1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
         };
 
         /* インデックス */
@@ -110,7 +141,7 @@ namespace MgBall
             7, 5, 6, 7, 4, 5, /* 後面 */
             4, 3, 0, 4, 7, 3, /* 左面 */
             3, 6, 2, 3, 7, 6, /* 上面 */
-            4, 1, 5, 4, 0, 1  /* 下面 */
+            4, 1, 5, 4, 0, 1 /* 下面 */
         };
 
         GL::Buffer vertexBuffer, indexBuffer;
@@ -119,7 +150,9 @@ namespace MgBall
         indexBuffer.setData(indices, GL::BufferUsage::StaticDraw);
 
         mesh.setCount(std::size(indices))
-            .addVertexBuffer(std::move(vertexBuffer), 0, Shaders::GenericGL3D::Position{})
+            .addVertexBuffer(std::move(vertexBuffer), 0,
+                             BasicShader::AttrPosition{},
+                             BasicShader::AttrTextureCoord{})
             .setIndexBuffer(std::move(indexBuffer), 0, GL::MeshIndexType::UnsignedInt);
     }
 }

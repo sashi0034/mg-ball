@@ -1,10 +1,10 @@
-layout (location = 0) in vec4 position;
-layout (location = 1) in vec2 textureCoordinates;
+layout (location = 0) in highp vec4 position;
+layout (location = 1) in highp vec2 textureCoord;
 
 uniform highp mat4 projectionMat;
 uniform highp mat4 transformationMat;
 
-out vec2 interpolatedTexCoord;
+out vec2 interpolatedTextureCoord;
 out vec3 transformedPos;
 
 void main() {
@@ -15,5 +15,5 @@ void main() {
     gl_Position = projectionMat * transformedPos4;
 
     // map texture cordinate
-    interpolatedTexCoord = textureCoordinates;
+    interpolatedTextureCoord = textureCoord;
 }

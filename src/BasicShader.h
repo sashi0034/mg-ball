@@ -12,8 +12,8 @@ namespace MgBall
     class BasicShader : public GL::AbstractShaderProgram
     {
     public:
-        typedef GL::Attribute<0, Vector2> Position;
-        typedef GL::Attribute<1, Vector2> TextureCoordinates;
+        typedef GL::Attribute<0, Vector3> AttrPosition;
+        typedef GL::Attribute<1, Vector2> AttrTextureCoord;
 
         explicit BasicShader();
 
@@ -28,10 +28,10 @@ namespace MgBall
             setUniform(uniform_projectionMat, matrix);
             return *this;
         }
-        
+
         BasicShader& bindTexture(GL::Texture2D& texture)
         {
-            texture.bind(textureData);
+            texture.bind(uniform_textureData);
             return *this;
         }
 
@@ -39,9 +39,6 @@ namespace MgBall
         Int uniform_transformationMat{};
         Int uniform_projectionMat{};
 
-        enum UniformFrag: Int
-        {
-            textureData
-        };
+        Int uniform_textureData{};
     };
 }
