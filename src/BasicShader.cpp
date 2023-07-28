@@ -27,8 +27,8 @@ namespace MgBall
 
         CORRADE_INTERNAL_ASSERT_OUTPUT(link());
 
-        uniform_transformationMat = uniformLocation("transformationMat");
-        uniform_projectionMat = uniformLocation("projectionMat");
+        uniform_transformMat = uniformLocation("transformMat");
+        uniform_projectMat = uniformLocation("projectMat");
 
         uniform_textureData = uniformLocation("textureData");
     }

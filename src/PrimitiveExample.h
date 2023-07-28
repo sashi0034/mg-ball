@@ -1,6 +1,7 @@
 ﻿#ifndef PRIMITIVEEXAMPLE_H
 #define PRIMITIVEEXAMPLE_H
 
+#include <array>
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/Math/Color.h>
@@ -31,13 +32,18 @@ namespace MgBall
 
     using namespace Math::Literals;
 
+    struct PrimitiveInstanceData
+    {
+        Matrix4x4 transformMat;
+    };
+
     class PrimitivesExample
     {
     public:
         PrimitivesExample() = default;
         explicit PrimitivesExample(Vector2 windowSize);
 
-        void drawEvent(const Vector3& translationVector);
+        void drawEvent();
         void mouseReleaseEvent();
         void mouseMoveEvent(Vector2 delta);
 
@@ -50,8 +56,10 @@ namespace MgBall
         Matrix4 _projection;
         Color3 _color;
         GL::Texture2D _texture;
+        GL::Buffer _instanceBuffer{};
+        std::array<PrimitiveInstanceData, 3> _instanceData{};
 
-        static void setupMesh(GL::Mesh& mesh);
+        void setupMesh(GL::Mesh& mesh);
     };
 
     inline PrimitivesExample::PrimitivesExample(Vector2 windowSize)
@@ -88,10 +96,10 @@ namespace MgBall
                 .setSubImage(0, {}, *textureImage);
     }
 
-    inline void PrimitivesExample::drawEvent(const Vector3& translationVector)
+    inline void PrimitivesExample::drawEvent()
     {
-        _shader.setTransformationMat(Matrix4::translation(translationVector) * _transformation)
-               .setProjectionMat(_projection)
+        _shader.setTransformMat(_transformation)
+               .setProjectMat(_projection)
                .bindTexture(_texture)
                .draw(_mesh);
     }
@@ -123,7 +131,7 @@ namespace MgBall
         };
 
         /* 頂点の位置 */
-        static const Vertex data[]{
+        constexpr Vertex data[]{
             /* 前面 */
             {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}},
             {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}},
@@ -163,7 +171,7 @@ namespace MgBall
             8, 10, 9, 8, 11, 10, /* 後面 */
             12, 14, 13, 12, 15, 14, /* 左面 */
             16, 18, 17, 16, 19, 18, /* 上面 */
-            20, 22, 21, 20, 23, 22  /* 下面 */
+            20, 22, 21, 20, 23, 22 /* 下面 */
         };
 
         GL::Buffer vertexBuffer, indexBuffer;
@@ -171,11 +179,25 @@ namespace MgBall
         vertexBuffer.setData(data, GL::BufferUsage::StaticDraw);
         indexBuffer.setData(indices, GL::BufferUsage::StaticDraw);
 
+        _instanceData[0] = {
+            Matrix4::rotationX(30.0_degf) * Matrix4::rotationY(60.0_degf) * Matrix4::translation(Vector3(1.5, 0, 1.5))
+        };
+        _instanceData[1] = {
+            Matrix4::rotationX(15.0_degf) * Matrix4::rotationY(-15.0_degf) * Matrix4::translation(Vector3(0, 0, 1.5))
+        };
+        _instanceData[2] = {
+            Matrix4::rotationX(30.0_degf) * Matrix4::rotationY(-60.0_degf) * Matrix4::translation(Vector3(-1.5, -0.5, 1.5))
+        };
+
+        _instanceBuffer.setData({_instanceData.data(), _instanceData.size()}, GL::BufferUsage::DynamicDraw);
+
         mesh.setCount(std::size(indices))
             .addVertexBuffer(std::move(vertexBuffer), 0,
                              BasicShader::AttrPosition{},
                              BasicShader::AttrTextureCoord{})
-            .setIndexBuffer(std::move(indexBuffer), 0, GL::MeshIndexType::UnsignedInt);
+            .setIndexBuffer(std::move(indexBuffer), 0, GL::MeshIndexType::UnsignedInt)
+            .addVertexBufferInstanced(_instanceBuffer, 1, 0, BasicShader::AttrInstancedTransformMat{})
+            .setInstanceCount(static_cast<int>(_instanceData.size()));
     }
 }
 

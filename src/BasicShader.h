@@ -14,18 +14,20 @@ namespace MgBall
     public:
         typedef GL::Attribute<0, Vector3> AttrPosition;
         typedef GL::Attribute<1, Vector2> AttrTextureCoord;
+        
+        typedef GL::Attribute<8, Matrix4x4> AttrInstancedTransformMat;
 
         explicit BasicShader();
 
-        BasicShader& setTransformationMat(const Matrix4& matrix)
+        BasicShader& setTransformMat(const Matrix4& matrix)
         {
-            setUniform(uniform_transformationMat, matrix);
+            setUniform(uniform_transformMat, matrix);
             return *this;
         }
 
-        BasicShader& setProjectionMat(const Matrix4& matrix)
+        BasicShader& setProjectMat(const Matrix4& matrix)
         {
-            setUniform(uniform_projectionMat, matrix);
+            setUniform(uniform_projectMat, matrix);
             return *this;
         }
 
@@ -36,9 +38,9 @@ namespace MgBall
         }
 
     private:
-        Int uniform_transformationMat{};
-        Int uniform_projectionMat{};
-
+        Int uniform_transformMat{};
+        Int uniform_projectMat{};
+        
         Int uniform_textureData{};
     };
 }
