@@ -53,14 +53,16 @@ namespace MgBall
 
         TexturedQuadShader& bindTexture(GL::Texture2D& texture)
         {
-            texture.bind(TextureUnit);
+            setUniform(_textureDataUniform, TextureUnitIndex_textureData);
+            texture.bind(TextureUnitIndex_textureData);
             return *this;
         }
 
     private:
-        enum: Int { TextureUnit = 0 };
+        enum: Int { TextureUnitIndex_textureData = 0 };
 
         Int _colorUniform;
+        Int _textureDataUniform;
     };
 }
 

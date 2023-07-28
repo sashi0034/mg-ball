@@ -33,11 +33,13 @@ namespace MgBall
 
         BasicShader& bindTexture(GL::Texture2D& texture)
         {
-            texture.bind(uniform_textureData);
+            texture.bind(textureUnit_textureData);
             return *this;
         }
 
     private:
+        static constexpr Int textureUnit_textureData = 0;
+        
         Int uniform_transformMat{};
         Int uniform_projectMat{};
         

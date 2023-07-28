@@ -60,6 +60,7 @@ namespace MgBall
         CORRADE_INTERNAL_ASSERT_OUTPUT(link());
 
         _colorUniform = uniformLocation("color");
+        _textureDataUniform = uniformLocation("textureData");
         // setUniform(uniformLocation("textureData"), TextureUnit);
     }
 }

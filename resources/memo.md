@@ -1,0 +1,4 @@
+
+# memo
+
+libpngがmsysのほう入っているMinGWビルド版になっていてMSVCビルドできなかったから、自前ビルドしてcmake-guiで修正した

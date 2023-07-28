@@ -99,9 +99,9 @@ namespace MgBall
 
         PluginManager::Manager<Trade::AbstractImporter> manager;
         Containers::Pointer<Trade::AbstractImporter> importer =
-            manager.loadAndInstantiate("TgaImporter");
+            manager.loadAndInstantiate("PngImporter");
         const Utility::Resource rs{ConstParam::RscMgBall};
-        if (!importer || !importer->openData(rs.getRaw("stone.tga")))
+        if (!importer || !importer->openData(rs.getRaw("simple1.png")))
             std::exit(1);
 
         Containers::Optional<Trade::ImageData2D> textureImage = importer->image2D(0);

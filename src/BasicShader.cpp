@@ -31,5 +31,7 @@ namespace MgBall
         uniform_projectMat = uniformLocation("projectMat");
 
         uniform_textureData = uniformLocation("textureData");
+
+        setUniform(uniform_textureData, textureUnit_textureData);
     }
 }

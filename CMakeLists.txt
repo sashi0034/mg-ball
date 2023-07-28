@@ -13,8 +13,13 @@ add_subdirectory(libs/corrade EXCLUDE_FROM_ALL)
 set(CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/libs/SDL2-2.0.10 ${CMAKE_PREFIX_PATH})
 set(MAGNUM_WITH_SDL2APPLICATION ON CACHE BOOL "" FORCE)
 set(MAGNUM_WITH_TGAIMPORTER ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_PNGIMPORTER ON CACHE BOOL "" FORCE)
 add_subdirectory(libs/magnum EXCLUDE_FROM_ALL)
+
+set(MAGNUM_WITH_PNGIMPORTER ON CACHE BOOL "" FORCE)
+add_subdirectory(libs/magnum-plugins EXCLUDE_FROM_ALL)
 
 add_subdirectory(src)
 
 add_dependencies(${PROJECT_NAME} Magnum::TgaImporter)
+add_dependencies(${PROJECT_NAME} MagnumPlugins::PngImporter)
