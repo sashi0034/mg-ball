@@ -2,6 +2,7 @@
 #include <Magnum/Platform/Sdl2Application.h>
 
 #include "ConstParam.h"
+#include "MainContext.h"
 #include "PrimitiveExample.h"
 #include "TexturedQuadExample.h"
 #include "Corrade/Utility/Path.h"
@@ -23,9 +24,12 @@ namespace MgBall
         void mousePressEvent(MouseEvent& event) override;
         void mouseReleaseEvent(MouseEvent& event) override;
         void mouseMoveEvent(MouseMoveEvent& event) override;
+        void keyPressEvent(KeyEvent& event) override;
+        void keyReleaseEvent(KeyEvent& event) override;
 
         TexturedQuadExample _texturedQuadExample;
         PrimitivesExample _primitivesExample;
+        MainContext m_mainContext{};
     };
 
     MainApp::MainApp(const Arguments& arguments): Platform::Application{arguments}
@@ -76,6 +80,18 @@ namespace MgBall
         _primitivesExample.mouseMoveEvent(3.0f * Vector2{event.relativePosition()} / Vector2{windowSize()});
 
         redraw();
+        event.setAccepted();
+    }
+
+    void MainApp::keyPressEvent(KeyEvent& event)
+    {
+        m_mainContext.OnKeyPress(event);
+        event.setAccepted();
+    }
+
+    void MainApp::keyReleaseEvent(KeyEvent& event)
+    {
+        m_mainContext.OnKeyRelease(event);
         event.setAccepted();
     }
 }

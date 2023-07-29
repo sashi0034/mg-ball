@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME} WIN32
     TexturedQuadExample.h
     PrimitiveExample.h
     TexturedQuadShader.h TexturedQuadShader.cpp
+    MainContext.h MainContext.cpp
     MainApp.cpp
     ${APP_RESOURCES})
     
