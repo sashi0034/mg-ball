@@ -107,25 +107,6 @@ namespace MgBall
         Containers::Optional<Trade::ImageData2D> textureImage = importer->image2D(0);
         CORRADE_INTERNAL_ASSERT(textureImage);
 
-        // https://doc.magnum.graphics/magnum/classMagnum_1_1Image.html
-        Vector2i size{512, 256};
-        PixelFormat format = PixelFormat::RGBA8Unorm;
-
-        Image2D image{
-            format, size, Containers::Array<char>{
-                ValueInit,
-                std::size_t(size.product() * pixelFormatSize(format))
-            }
-        };
-
-        for (int i = 0; i < 128 * 4; i += 4)
-            for (int j = 0; j < 32; ++j)
-            {
-                image.data()[i + j * 512 * 4 + 0] = static_cast<char>(0xFF - i);
-                image.data()[i + j * 512 * 4 + 1] = static_cast<char>(0);
-                image.data()[i + j * 512 * 4 + 2] = static_cast<char>(i);
-                image.data()[i + j * 512 * 4 + 3] = static_cast<char>(0xFF - j * 8);
-            }
         _texture.setWrapping(GL::SamplerWrapping::ClampToEdge)
                 .setMagnificationFilter(GL::SamplerFilter::Linear)
                 .setMinificationFilter(GL::SamplerFilter::Linear)
