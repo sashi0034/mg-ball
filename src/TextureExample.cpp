@@ -40,9 +40,22 @@ namespace MgBall
             2, 1, 3
         };
 
+        auto&& textureImage = MainRsc::Instance().Images().beatrice_32x32;
+
         // インスタンス設定
         for (int i = 0; i < m_instanceData.size(); ++i)
-            m_instanceData[i] = {Matrix3().rotation(i * 45.0_degf), Matrix3(Math::IdentityInit)};
+            m_instanceData[i] = {Matrix3().rotation(i * 45.0_degf), Vector4()};
+        
+        m_instanceData[0].instTexRect =
+            Vector4(0, 0,
+            32.0f / textureImage->size().x(), 32.0f / textureImage->size().y());
+        m_instanceData[1].instTexRect =
+            Vector4(32.0f / textureImage->size().x(), 0,
+                    32.0f / textureImage->size().x(), 32.0f / textureImage->size().y());
+        m_instanceData[2].instTexRect =
+            Vector4(32.0f / textureImage->size().x(), 32.0f / textureImage->size().y(),
+                    32.0f / textureImage->size().x(), 32.0f / textureImage->size().y());
+        
         m_instanceBuffer.setData({m_instanceData.data(), m_instanceData.size()}, GL::BufferUsage::DynamicDraw);
         m_mesh.setCount(Containers::arraySize(indices))
               .addVertexBuffer(GL::Buffer{vertices}, 0,
@@ -52,10 +65,8 @@ namespace MgBall
                               GL::MeshIndexType::UnsignedInt)
               .addVertexBufferInstanced(m_instanceBuffer, 1, 0,
                                         TextureShader::In_instTransformMat{},
-                                        TextureShader::In_instTextureMat{})
+                                        TextureShader::In_instTexRect{})
               .setInstanceCount(static_cast<int>(m_instanceData.size()));
-
-        auto&& textureImage = MainRsc::Instance().Images().beatrice_32x32;
 
         m_texture.setWrapping(GL::SamplerWrapping::ClampToEdge)
                  .setMagnificationFilter(GL::SamplerFilter::Nearest)

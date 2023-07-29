@@ -16,7 +16,7 @@ namespace MgBall::Shaders
         typedef GL::Attribute<1, Vector2> In_texCoord;
         
         typedef GL::Attribute<8, Matrix3x3> In_instTransformMat;
-        typedef GL::Attribute<11, Matrix3x3> In_instTextureMat;
+        typedef GL::Attribute<11, Vector4> In_instTexRect;
 
         explicit TextureShader();
 

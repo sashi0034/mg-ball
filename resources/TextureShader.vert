@@ -1,7 +1,7 @@
 ﻿layout (location = 0) in highp vec2 position;
 layout (location = 1) in highp vec2 texCoord;
 layout (location = 8) in highp mat3 instTransformMat;
-layout (location = 11) in highp mat3 instTextureMat;
+layout (location = 11) in highp vec4 instTexRect;
 
 out vec2 interpolatedTexCoord;
 
@@ -14,6 +14,6 @@ void main() {
     gl_Position.w = 1;
 
     // calculate texture cordinate
-    vec3 newTexCoord = instTextureMat * vec3(texCoord, 0);
-    interpolatedTexCoord = newTexCoord.xy;
+    interpolatedTexCoord.x = instTexRect.x + texCoord.x * instTexRect.z;
+    interpolatedTexCoord.y = 1 - (instTexRect.y + instTexRect.w) + texCoord.y * instTexRect.w;
 }

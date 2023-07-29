@@ -23,7 +23,7 @@ namespace MgBall
         struct InstanceData
         {
             Matrix3x3 instTransformMat;
-            Matrix3x3 instTextureMat;
+            Vector4 instTexRect;
         };
         
         GL::Mesh m_mesh{};
