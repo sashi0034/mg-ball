@@ -20,6 +20,12 @@ namespace MgBall::Shaders
 
         explicit TextureShader();
 
+        TextureShader& setScreenSize(const Vector2& screenSize)
+        {
+            setUniform(uniform_screenSize, screenSize);
+            return *this;
+        }
+        
         TextureShader& bindTexture(GL::Texture2D& texture)
         {
             texture.bind(textureUnit_textureData);
@@ -28,6 +34,8 @@ namespace MgBall::Shaders
 
     private:
         static constexpr Int textureUnit_textureData = 0;
+
+        Int uniform_screenSize{};
         
         Int uniform_textureData{};
     };

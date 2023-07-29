@@ -27,6 +27,7 @@ namespace MgBall::Shaders
 
         CORRADE_INTERNAL_ASSERT_OUTPUT(link());
 
+        uniform_screenSize = uniformLocation("screenSize");
         uniform_textureData = uniformLocation("textureData");
 
         setUniform(uniform_textureData, textureUnit_textureData);
