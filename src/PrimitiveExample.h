@@ -197,10 +197,10 @@ namespace MgBall
 
         mesh.setCount(std::size(indices))
             .addVertexBuffer(std::move(vertexBuffer), 0,
-                             BasicShader::AttrPosition{},
-                             BasicShader::AttrTextureCoord{})
+                             BasicShader::In_position{},
+                             BasicShader::In_textureCoord{})
             .setIndexBuffer(std::move(indexBuffer), 0, GL::MeshIndexType::UnsignedInt)
-            .addVertexBufferInstanced(_instanceBuffer, 1, 0, BasicShader::AttrInstancedTransformMat{})
+            .addVertexBufferInstanced(_instanceBuffer, 1, 0, BasicShader::In_instancedTransformMat{})
             .setInstanceCount(static_cast<int>(_instanceData.size()));
     }
 }

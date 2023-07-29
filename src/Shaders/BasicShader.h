@@ -12,10 +12,10 @@ namespace MgBall::Shaders
     class BasicShader : public GL::AbstractShaderProgram
     {
     public:
-        typedef GL::Attribute<0, Vector3> AttrPosition;
-        typedef GL::Attribute<1, Vector2> AttrTextureCoord;
+        typedef GL::Attribute<0, Vector3> In_position;
+        typedef GL::Attribute<1, Vector2> In_textureCoord;
         
-        typedef GL::Attribute<8, Matrix4x4> AttrInstancedTransformMat;
+        typedef GL::Attribute<8, Matrix4x4> In_instancedTransformMat;
 
         explicit BasicShader();
 
