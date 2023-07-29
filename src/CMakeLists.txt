@@ -8,9 +8,12 @@ corrade_add_resource(APP_RESOURCES ../resources/resources.conf)
 add_executable(${PROJECT_NAME} WIN32
     ConstParam.h
     BasicShader.h BasicShader.cpp
+    TextureShader.h TextureShader.cpp
+    TextureExample.h TextureExample.cpp
     TexturedQuadExample.h
     PrimitiveExample.h
     TexturedQuadShader.h TexturedQuadShader.cpp
+    MainInput.h MainInput.cpp
     MainContext.h MainContext.cpp
     MainApp.cpp
     ${APP_RESOURCES})

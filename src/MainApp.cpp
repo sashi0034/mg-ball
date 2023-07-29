@@ -5,6 +5,7 @@
 #include "MainContext.h"
 #include "PrimitiveExample.h"
 #include "TexturedQuadExample.h"
+#include "TextureExample.h"
 #include "Corrade/Utility/Path.h"
 
 using namespace Magnum;
@@ -27,25 +28,22 @@ namespace MgBall
         void keyPressEvent(KeyEvent& event) override;
         void keyReleaseEvent(KeyEvent& event) override;
 
-        TexturedQuadExample _texturedQuadExample;
+        TextureExample m_textureExample;
         PrimitivesExample _primitivesExample;
         MainContext m_mainContext{};
     };
 
     MainApp::MainApp(const Arguments& arguments): Platform::Application{arguments}
     {
-        const auto path = Utility::Path::join(
-            Utility::Path::split(Utility::Path::fromNativeSeparators(__FILE__)).first(),
-            "../resources/resources.conf");
-        Utility::Resource::overrideGroup(ConstParam::RscMgBall, path);
-
-        _texturedQuadExample = TexturedQuadExample{};
+        m_textureExample = TextureExample{};
         _primitivesExample = PrimitivesExample{Vector2{windowSize()}};
+
+        GL::Renderer::setClearColor(0xf8f5e6_rgbf);
     }
 
     void MainApp::tickEvent()
     {
-        _texturedQuadExample.tickEvent();
+        m_textureExample.tickEvent();
         redraw();
     }
 
@@ -58,8 +56,11 @@ namespace MgBall
         GL::defaultFramebuffer.clearDepth(1.0f);
         GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
 
-        _texturedQuadExample.drawEvent();
         _primitivesExample.drawEvent();
+
+        GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
+        m_textureExample.drawEvent();
+        GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
 
         swapBuffers();
     }
@@ -96,4 +97,13 @@ namespace MgBall
     }
 }
 
-MAGNUM_APPLICATION_MAIN(MgBall::MainApp)
+int main(int argc, char** argv)
+{
+    const auto path = Utility::Path::join(
+        Utility::Path::split(Utility::Path::fromNativeSeparators(__FILE__)).first(),
+        "../resources/resources.conf");
+    Utility::Resource::overrideGroup(MgBall::ConstParam::RscMgBall, path);
+
+    MgBall::MainApp app({argc, argv});
+    return app.exec();
+}

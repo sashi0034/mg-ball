@@ -107,6 +107,10 @@ namespace MgBall
     inline void PrimitivesExample::mouseReleaseEvent()
     {
         _color = Color3::fromHsv({_color.hue() + 50.0_degf, 1.0f, 1.0f});
+        
+        _instanceData[0].transformMat =
+            Matrix4::rotationX(-15.0_degf) * Matrix4::rotationZ(-15.0_degf) * Matrix4::translation(Vector3(0, 0, 3.0));
+        _instanceBuffer.setData({_instanceData.data(), _instanceData.size()}, GL::BufferUsage::DynamicDraw);
     }
 
     inline void PrimitivesExample::mouseMoveEvent(Vector2 delta)
