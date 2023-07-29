@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "MainInput.h"
+#include "MainRsc.h"
+#include "Util.h"
 
 namespace MgBall
 {
@@ -9,6 +11,8 @@ namespace MgBall
     public:
         static MainContext& Instance() { return *s_instance; }
         MainInput& GetMainInput() { return m_input; }
+        MainRsc& GetMainRsc() { return m_rsc; }
+        Random& GetRandom() { return m_random; }
 
         MainContext();
         ~MainContext();
@@ -19,6 +23,8 @@ namespace MgBall
         // MainContext& operator=(MainContext&&) noexcept { return *this; }
     private:
         MainInput m_input;
+        MainRsc m_rsc;
+        Random m_random;
         static MainContext* s_instance;
     };
 }

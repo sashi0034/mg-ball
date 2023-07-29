@@ -28,9 +28,10 @@ namespace MgBall
         void keyPressEvent(KeyEvent& event) override;
         void keyReleaseEvent(KeyEvent& event) override;
 
+        MainContext m_mainContext{};
+
         TextureExample m_textureExample;
         PrimitivesExample _primitivesExample;
-        MainContext m_mainContext{};
     };
 
     MainApp::MainApp(const Arguments& arguments): Platform::Application{arguments}

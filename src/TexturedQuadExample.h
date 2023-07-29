@@ -33,9 +33,7 @@
 #include <Corrade/Containers/StringView.h>
 #include <Corrade/PluginManager/Manager.h>
 #include <Corrade/Utility/Resource.h>
-#include <Magnum/ImageView.h>
 #include <Magnum/GL/Buffer.h>
-#include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/TextureFormat.h>
@@ -45,9 +43,6 @@
 #include "Shaders/TexturedQuadShader.h"
 #include "Magnum/Image.h"
 #include "Magnum/Magnum.h"
-#include "Magnum/PixelFormat.h"
-#include "Magnum/GL/Framebuffer.h"
-#include "Magnum/GL/Renderbuffer.h"
 #include "Magnum/Platform/ScreenedApplication.h"
 
 namespace MgBall

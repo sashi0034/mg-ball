@@ -1,22 +1,17 @@
 ﻿#include "TextureExample.h"
 
 #include <Corrade/Containers/Optional.h>
-#include <Corrade/Containers/StringView.h>
 #include <Corrade/PluginManager/Manager.h>
-#include <Corrade/Utility/Resource.h>
-#include <Magnum/ImageView.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/TextureFormat.h>
-#include <Magnum/Trade/AbstractImporter.h>
 #include <Magnum/Trade/ImageData.h>
 
-#include "ConstParam.h"
 #include "Magnum/Magnum.h"
-#include "Magnum/PixelFormat.h"
-#include "Magnum/GL/Renderer.h"
 #include <Magnum/Math/Matrix3.h>
+
+#include "MainRsc.h"
 
 namespace MgBall
 {
@@ -60,15 +55,7 @@ namespace MgBall
                                         TextureShader::In_instTextureMat{})
               .setInstanceCount(static_cast<int>(m_instanceData.size()));
 
-        PluginManager::Manager<Trade::AbstractImporter> manager;
-        Containers::Pointer<Trade::AbstractImporter> importer =
-            manager.loadAndInstantiate("PngImporter");
-        const Utility::Resource rs{ConstParam::RscMgBall};
-        if (!importer || !importer->openData(rs.getRaw("beatrice_32x32.png")))
-            std::exit(1);
-
-        Containers::Optional<Trade::ImageData2D> textureImage = importer->image2D(0);
-        CORRADE_INTERNAL_ASSERT(textureImage);
+        auto&& textureImage = MainRsc::Instance().Images().beatrice_32x32;
 
         m_texture.setWrapping(GL::SamplerWrapping::ClampToEdge)
                  .setMagnificationFilter(GL::SamplerFilter::Nearest)
