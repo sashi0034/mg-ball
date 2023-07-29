@@ -1,24 +1,15 @@
 ﻿#pragma once
-#include <array>
-#include <optional>
-#include <vector>
 
-#include "Magnum/Platform/Sdl2Application.h"
+#include "MainInput.h"
 
 namespace MgBall
 {
-    using namespace Magnum::Platform;
-    using KeyCode = Sdl2Application::KeyEvent::Key;
-
-    struct KeyStatus
-    {
-        bool IsPressed{};
-        Sdl2Application::InputEvent::Modifiers Modifiers{};
-    };
-
     class MainContext
     {
     public:
+        static MainContext& Instance() { return *s_instance; }
+        MainInput& GetMainInput() { return m_input; }
+
         MainContext();
         ~MainContext();
 
@@ -26,18 +17,8 @@ namespace MgBall
         // MainContext(MainContext&&) = delete;
         // MainContext& operator=(const MainContext&) { return *this; }
         // MainContext& operator=(MainContext&&) noexcept { return *this; }
-
-        static MainContext& Instance() { return *s_instance; }
-
-        [[nodiscard]] const KeyStatus& KeyState(KeyCode key) const;
-
-        void OnKeyPress(const Sdl2Application::KeyEvent& key);
-        void OnKeyRelease(const Sdl2Application::KeyEvent& key);
-
     private:
-        std::vector<KeyStatus> m_keyStatuses{};
-
-        void reserveKeyStatuses(KeyCode key);
+        MainInput m_input;
         static MainContext* s_instance;
     };
 }

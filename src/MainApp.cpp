@@ -85,13 +85,13 @@ namespace MgBall
 
     void MainApp::keyPressEvent(KeyEvent& event)
     {
-        m_mainContext.OnKeyPress(event);
+        m_mainContext.GetMainInput().OnKeyPress(event);
         event.setAccepted();
     }
 
     void MainApp::keyReleaseEvent(KeyEvent& event)
     {
-        m_mainContext.OnKeyRelease(event);
+        m_mainContext.GetMainInput().OnKeyRelease(event);
         event.setAccepted();
     }
 }
