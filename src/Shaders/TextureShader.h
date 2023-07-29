@@ -4,7 +4,7 @@
 #include <Magnum/GL/Texture.h>
 #include "Magnum/Math/Matrix4.h"
 
-namespace MgBall
+namespace MgBall::Shaders
 {
     using namespace Magnum;
     using namespace Containers::Literals;

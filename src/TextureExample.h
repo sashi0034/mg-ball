@@ -5,10 +5,14 @@
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/GL/Texture.h>
 
-#include "TextureShader.h"
+#include "Shaders/TextureShader.h"
 
 namespace MgBall
 {
+    using namespace Magnum;
+    using namespace Containers::Literals;
+    using namespace Shaders;
+    
     class TextureExample
     {
     public:

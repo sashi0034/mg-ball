@@ -10,7 +10,7 @@
 #include <Magnum/Primitives/Cube.h>
 #include <Magnum/Shaders/PhongGL.h>
 
-#include "BasicShader.h"
+#include "Shaders/BasicShader.h"
 #include "Corrade/PluginManager/Manager.h"
 #include "Corrade/Utility/Resource.h"
 #include "Magnum/GL/TextureFormat.h"
@@ -29,8 +29,8 @@
 namespace MgBall
 {
     using namespace Magnum;
-
     using namespace Math::Literals;
+    using namespace Shaders;
 
     struct PrimitiveInstanceData
     {

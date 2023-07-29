@@ -37,9 +37,9 @@
 #include <Magnum/GL/Shader.h>
 #include <Magnum/GL/Version.h>
 
-#include "ConstParam.h"
+#include "../ConstParam.h"
 
-namespace MgBall
+namespace MgBall::Shaders
 {
     TexturedQuadShader::TexturedQuadShader()
     {

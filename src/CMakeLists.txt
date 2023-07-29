@@ -5,17 +5,10 @@ set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
 corrade_add_resource(APP_RESOURCES ../resources/resources.conf)
 
+file(GLOB_RECURSE SOURCES "*.cpp" "*.h")
+
 add_executable(${PROJECT_NAME} WIN32
-    ConstParam.h
-    BasicShader.h BasicShader.cpp
-    TextureShader.h TextureShader.cpp
-    TextureExample.h TextureExample.cpp
-    TexturedQuadExample.h
-    PrimitiveExample.h
-    TexturedQuadShader.h TexturedQuadShader.cpp
-    MainInput.h MainInput.cpp
-    MainContext.h MainContext.cpp
-    MainApp.cpp
+    ${SOURCES}
     ${APP_RESOURCES})
     
 target_link_libraries(${PROJECT_NAME} PRIVATE

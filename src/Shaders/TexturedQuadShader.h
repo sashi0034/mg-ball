@@ -33,7 +33,7 @@
 #include <Magnum/GL/Texture.h>
 #include <Magnum/Math/Color.h>
 
-namespace MgBall
+namespace MgBall::Shaders
 {
     using namespace Magnum;
 

@@ -42,7 +42,7 @@
 #include <Magnum/Trade/AbstractImporter.h>
 #include <Magnum/Trade/ImageData.h>
 
-#include "TexturedQuadShader.h"
+#include "Shaders/TexturedQuadShader.h"
 #include "Magnum/Image.h"
 #include "Magnum/Magnum.h"
 #include "Magnum/PixelFormat.h"
@@ -52,6 +52,8 @@
 
 namespace MgBall
 {
+    using namespace Shaders;
+    
     class TexturedQuadExample
     {
     public:
