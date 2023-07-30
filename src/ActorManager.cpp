@@ -35,7 +35,7 @@ namespace MgBall
         for (int i = 0; i < m_actorList.size(); ++i)
         {
             auto&& actor = m_actorList[i];
-            if (actor->IsActive() == false) continue;;
+            if (actor->IsActive() == false) continue;
             actor->Tick();
         }
     }

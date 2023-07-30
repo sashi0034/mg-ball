@@ -8,9 +8,14 @@ namespace MgBall::Gaming
     public:
         Plain();
         ~Plain() override = default;
-        
+
         void Tick() override;
         void Draw(const DrawingContext& context) override;
-        float OrderPriority() override{return 0;}
+        float OrderPriority() override { return 0; }
+
+    private:
+        GL::Texture2D m_texture;
+        GL::Mesh m_mesh{};
+        Matrix4 m_transform{};
     };
 }

@@ -31,6 +31,7 @@ namespace MgBall
     struct ImageResource
     {
         Containers::Optional<Trade::ImageData2D> beatrice_32x32;
+        Containers::Optional<Trade::ImageData2D> stone1;
     };
 
     class MainRsc

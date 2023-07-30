@@ -6,12 +6,17 @@
 #include "MainInput.h"
 #include "MainRsc.h"
 #include "Util.h"
-#include "Gaming/GamingManager.h"
+#include "Gaming/GamingScene.h"
 #include "Magnum/GL/Framebuffer.h"
 
 namespace MgBall
 {
     using namespace Magnum;
+
+    struct MainContextScenes
+    {
+        std::shared_ptr<Gaming::GamingScene> gamingScene;
+    };
 
     class MainContext
     {
@@ -21,8 +26,8 @@ namespace MgBall
         MainRsc& GetMainRsc() { return m_rsc; }
         Random& GetRandom() { return m_random; }
         ActorManager& GetActorManager() { return m_actorManager; }
-        Gaming::GamingManager& GetGamingManager() { return m_gamingManager; }
 
+        MainContextScenes& Scenes() { return m_scenes; }
         GL::Framebuffer& SceneFrameBuffer() { return m_sceneFramebuffer; }
 
         MainContext();
@@ -40,8 +45,8 @@ namespace MgBall
         MainRsc m_rsc{};
         Random m_random{};
         ActorManager m_actorManager{};
-        Gaming::GamingManager m_gamingManager{};
 
+        MainContextScenes m_scenes{};
         GL::Framebuffer m_sceneFramebuffer{{{}, ConstParam::SceneSize}};
 
         static MainContext* s_instance;

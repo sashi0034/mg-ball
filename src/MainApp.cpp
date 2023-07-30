@@ -43,13 +43,14 @@ namespace MgBall
         GL::Renderer::setClearColor(0xf8f5e6_rgbf);
         m_mainContext.SceneFrameBuffer().setViewport(Range2Di({0, 0}, ConstParam::SceneSize));
 
-        m_mainContext.GetActorManager().Birth(new Gaming::GamingManager());
+        // entry point
+        m_mainContext.Scenes().gamingScene = m_mainContext.GetActorManager().BirthAs(new Gaming::GamingScene());
     }
 
     void MainApp::tickEvent()
     {
         m_textureExample.tickEvent();
-        m_mainContext.GetGamingManager().Tick();
+        m_mainContext.GetActorManager().Tick();
         redraw();
     }
 
@@ -72,7 +73,7 @@ namespace MgBall
         m_textureExample.drawEvent(sceneFrameBuffer);
         GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
 
-        m_mainContext.GetGamingManager().Draw({sceneFrameBuffer});
+        m_mainContext.GetActorManager().Draw({sceneFrameBuffer});
 
         // defaultFramebufferへ書き込み
         GL::defaultFramebuffer

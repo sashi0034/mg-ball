@@ -15,6 +15,6 @@ void main() {
 
     gl_Position = projectMat * transformedPos4;
 
-    // map texture cordinate
+    // calculate texture cordinate
     interpolatedTextureCoord = textureCoord;
 }
