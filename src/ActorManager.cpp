@@ -40,7 +40,8 @@ namespace MgBall
         }
     }
 
-    void ActorManager::Draw(const DrawingContext& context)
+    template <DrawingOrder order>
+    void ActorManager::drawInternal(const DrawingContext& context)
     {
         // 優先度が高いほど後から描画するように並び変える
         sortActorList();
@@ -50,8 +51,23 @@ namespace MgBall
         {
             auto&& actor = m_actorList[i];
             if (actor->IsActive() == false) continue;
-            actor->Draw(context);
+            actor->Draw<order>(context);
         }
+    }
+
+    void ActorManager::Draw3D(const DrawingContext& context)
+    {
+        drawInternal<DrawingOrder::ThreeD>(context);
+    }
+
+    void ActorManager::Draw2D(const DrawingContext& context)
+    {
+        drawInternal<DrawingOrder::TwoD>(context);
+    }
+
+    void ActorManager::DrawGui(const DrawingContext& context)
+    {
+        drawInternal<DrawingOrder::Gui>(context);
     }
 
     void ActorManager::Clear()

@@ -27,8 +27,8 @@ namespace MgBall::Gaming
         ActorBase::Tick();
     }
 
-    void GamingScene::Draw(const DrawingContext& context)
+    void GamingScene::Draw3D(const DrawingContext& context)
     {
-        ActorBase::Draw(context);
+        ActorBase::Draw3D(context);
     }
 }

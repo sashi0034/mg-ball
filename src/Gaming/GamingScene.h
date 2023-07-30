@@ -16,7 +16,7 @@ namespace MgBall::Gaming
         GamingScene();
         ~GamingScene() override = default;
         void Tick() override;
-        void Draw(const DrawingContext& context) override;
+        void Draw3D(const DrawingContext& context) override;
 
         float OrderPriority() override { return 0; }
 

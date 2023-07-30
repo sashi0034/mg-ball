@@ -30,10 +30,26 @@ namespace MgBall
         m_children->Tick();
     }
 
-    void ActorBase::Draw(const DrawingContext& context)
+    template <DrawingOrder order>
+    void ActorBase::drawInternal(const DrawingContext& context)
     {
         if (m_children == nullptr) return;
-        m_children->Draw(context);
+        m_children->Draw<order>(context);
+    }
+
+    void ActorBase::Draw3D(const DrawingContext& context)
+    {
+        drawInternal<DrawingOrder::ThreeD>(context);
+    }
+
+    void ActorBase::Draw2D(const DrawingContext& context)
+    {
+        drawInternal<DrawingOrder::TwoD>(context);
+    }
+
+    void ActorBase::DrawGui(const DrawingContext& context)
+    {
+        drawInternal<DrawingOrder::Gui>(context);
     }
 
     float ActorBase::OrderPriority()

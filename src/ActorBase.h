@@ -1,26 +1,25 @@
 ﻿#pragma once
 #include <memory>
 
+#include "Drawing.h"
 #include "ActorManager.h"
-#include "Magnum/Magnum.h"
-#include "Magnum/GL/AbstractFramebuffer.h"
 
 namespace MgBall
 {
     using namespace Magnum;
     class ActorManager;
 
-    struct DrawingContext
-    {
-        const GL::AbstractFramebuffer& frameBuffer;
-    };
-    
     class ActorBase
     {
     public:
         virtual ~ActorBase() = default;
         virtual void Tick();
-        virtual void Draw(const DrawingContext& context);
+        virtual void Draw3D(const DrawingContext& context);
+        virtual void Draw2D(const DrawingContext& context);
+        virtual void DrawGui(const DrawingContext& context);
+
+        template <DrawingOrder order>
+        void Draw(const DrawingContext& context);
 
         virtual float OrderPriority();
 
@@ -37,5 +36,25 @@ namespace MgBall
         bool m_isActive = true;
         bool m_isAlive = true;
         std::unique_ptr<ActorManager> m_children{};
+
+        template <DrawingOrder order>
+        void drawInternal(const DrawingContext& context);
     };
+
+    template <DrawingOrder order>
+    void ActorBase::Draw(const DrawingContext& context)
+    {
+        if constexpr (order == DrawingOrder::TwoD)
+        {
+            Draw2D(context);
+        }
+        else if constexpr (order == DrawingOrder::ThreeD)
+        {
+            Draw3D(context);
+        }
+        else if constexpr (order == DrawingOrder::Gui)
+        {
+            DrawGui(context);
+        }
+    }
 }

@@ -1,5 +1,7 @@
 ﻿#include "Plain.h"
 
+#include <imgui.h>
+
 #include "GamingScene.h"
 #include "../MainRsc.h"
 #include "../Shaders/BasicShader.h"
@@ -48,9 +50,10 @@ namespace MgBall::Gaming
               .addVertexBufferInstanced(instanceBuffer, 1, 0, BasicShader::In_instancedTransformMat{})
               .setInstanceCount(static_cast<int>(instanceData.size()));
 
+        m_posY = -1.0f;
         m_transform =
             Matrix4::scaling({10, 1, 10});
-        m_transform.translation() = {0, -1.0, 0};
+        m_transform.translation() = {0, m_posY, 0};
 
         auto&& image = MainRsc::Instance().Images().stone1;
         m_texture.setWrapping(GL::SamplerWrapping::ClampToEdge)
@@ -65,12 +68,21 @@ namespace MgBall::Gaming
         ActorBase::Tick();
     }
 
-    void Plain::Draw(const DrawingContext& context)
+    void Plain::Draw3D(const DrawingContext& context)
     {
         MainRsc::Instance().Shaders().basicShader
                            .setTransformMat(m_transform)
                            .setProjectMat(GamingScene::Instance().CameraProject())
                            .bindTexture(m_texture)
                            .draw(m_mesh);
+    }
+
+    void Plain::DrawGui(const DrawingContext& context)
+    {
+        ImGui::Text("Hello, world!");
+        if (ImGui::SliderFloat("m_posY", &m_posY, -2.0f, 0.0f))
+        {
+            m_transform.translation() = {0, m_posY, 0};
+        }
     }
 }

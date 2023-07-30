@@ -47,14 +47,16 @@ namespace MgBall
 
     MainApp::MainApp(const Arguments& arguments): Application{arguments}
     {
-        SDL_SetWindowSize(window(), 1280, 720);
+        constexpr Vector2i defaultWindowSize{1280, 720};
+
+        setWindowSize(defaultWindowSize);
         GL::defaultFramebuffer.setViewport(Range2Di({0, 0}, windowSize()));
 
         GL::Renderer::setClearColor(0xf8f5e6_rgbf);
         m_mainContext.SceneFrameBuffer().setViewport(Range2Di({0, 0}, ConstParam::SceneSize));
 
         m_imgui = ImGuiIntegration::Context(
-            Vector2(ConstParam::SceneSize), windowSize(), framebufferSize());
+            Vector2{defaultWindowSize}, windowSize(), ConstParam::SceneSize);
 
         // entry point
         m_mainContext.Scenes().gamingScene = m_mainContext.GetActorManager().BirthAs(new Gaming::GamingScene());
@@ -69,25 +71,44 @@ namespace MgBall
 
     void MainApp::drawEvent()
     {
-        // これでα値を反映
-        GL::Renderer::enable(GL::Renderer::Feature::Blending);
+        // α値設定
         GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
                                        GL::Renderer::BlendFunction::OneMinusSourceAlpha);
 
         auto&& sceneFrameBuffer = m_mainContext.SceneFrameBuffer();
         sceneFrameBuffer
             .clearDepth(1.0f)
-            .clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth)
+            .clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth | GL::FramebufferClear::Stencil)
             .bind();
 
+        // 3D描画
+        GL::Renderer::enable(GL::Renderer::Feature::Blending);
+        GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
+        GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
         GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
-        m_mainContext.GetActorManager().Draw({sceneFrameBuffer});
+        m_mainContext.GetActorManager().Draw3D({sceneFrameBuffer});
 
         _primitivesExample.drawEvent();
 
+        // 2D描画
+        GL::Renderer::enable(GL::Renderer::Feature::Blending);
+        GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
+        GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
         GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
-        m_textureExample.drawEvent(sceneFrameBuffer);
+        m_mainContext.GetActorManager().Draw2D({sceneFrameBuffer});
         
+        m_textureExample.drawEvent(sceneFrameBuffer);
+
+        // Gui描画
+        GL::Renderer::enable(GL::Renderer::Feature::Blending);
+        GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+        GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+        GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
+        m_imgui.newFrame();
+        m_mainContext.GetActorManager().DrawGui({sceneFrameBuffer});
+        m_imgui.updateApplicationCursor(*this);
+        m_imgui.drawFrame();
+
         // defaultFramebufferへ書き込み
         GL::defaultFramebuffer
             .clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth)
@@ -97,16 +118,6 @@ namespace MgBall
             {{}, ConstParam::SceneSize}, {{}, windowSize()},
             GL::FramebufferBlit::Color, GL::FramebufferBlitFilter::Linear);
 
-        GL::Renderer::enable(GL::Renderer::Feature::Blending);
-        GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
-        GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
-        GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
-        m_imgui.newFrame();
-        
-        ImGui::Text("Hello, world!");
-        
-        m_imgui.drawFrame();
-
         GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
         GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
 
@@ -115,8 +126,8 @@ namespace MgBall
 
     void MainApp::viewportEvent(ViewportEvent& event)
     {
-        m_imgui.relayout(Vector2{event.windowSize()} / event.dpiScaling(),
-                         event.windowSize(), event.framebufferSize());
+        // m_imgui.relayout(Vector2{event.windowSize()} / event.dpiScaling(),
+        //                  event.windowSize(), event.framebufferSize());
     }
 
     void MainApp::mousePressEvent(MouseEvent& event)
