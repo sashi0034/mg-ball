@@ -31,8 +31,8 @@ namespace MgBall
 
         MainContext m_mainContext{};
 
-        TextureExample m_textureExample;
-        PrimitivesExample _primitivesExample{Vector2{windowSize()}};
+        TextureExample m_textureExample{};
+        PrimitivesExample _primitivesExample{};
     };
 
     MainApp::MainApp(const Arguments& arguments): Application{arguments}

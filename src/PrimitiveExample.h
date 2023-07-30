@@ -40,8 +40,7 @@ namespace MgBall
     class PrimitivesExample
     {
     public:
-        PrimitivesExample() = default;
-        explicit PrimitivesExample(Vector2 windowSize);
+        explicit PrimitivesExample(Vector2i sceneSize = ConstParam::SceneSize);
 
         void drawEvent();
         void mouseReleaseEvent();
@@ -62,7 +61,7 @@ namespace MgBall
         void setupMesh(GL::Mesh& mesh);
     };
 
-    inline PrimitivesExample::PrimitivesExample(Vector2 windowSize)
+    inline PrimitivesExample::PrimitivesExample(Vector2i sceneSize)
     {
         GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
         GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
@@ -74,7 +73,7 @@ namespace MgBall
             Matrix4::rotationX(30.0_degf) * Matrix4::rotationY(40.0_degf);
         _projection =
             Matrix4::perspectiveProjection(
-                35.0_degf, Vector2{windowSize}.aspectRatio(), 0.01f, 100.0f) *
+                35.0_degf, Vector2{sceneSize}.aspectRatio(), 0.01f, 100.0f) *
             Matrix4::translation(Vector3::zAxis(-10.0f));
         _color = Color3::fromHsv({35.0_degf, 1.0f, 1.0f});
 
