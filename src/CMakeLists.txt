@@ -1,5 +1,3 @@
-find_package(Corrade REQUIRED Main)
-find_package(Magnum REQUIRED GL Trade Sdl2Application)
 
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
@@ -19,7 +17,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Magnum::MeshTools
     Magnum::Primitives
     Magnum::Shaders
-    Magnum::Trade)    
+    Magnum::Trade
+    MagnumIntegration::ImGui)    
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE
     <array>

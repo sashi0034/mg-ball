@@ -1,13 +1,16 @@
+#include <imgui.h>
+#include <Corrade/Utility/Path.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/GL/Framebuffer.h>
+#include <Magnum/GL/Renderer.h>
+#include <Magnum/Math/Color.h>
+#include <Magnum/ImGuiIntegration/Context.hpp>
 #include <Magnum/Platform/Sdl2Application.h>
 
 #include "ConstParam.h"
 #include "MainContext.h"
 #include "PrimitiveExample.h"
-#include "TexturedQuadExample.h"
 #include "TextureExample.h"
-#include "Corrade/Utility/Path.h"
-#include "Magnum/GL/Framebuffer.h"
 
 using namespace Magnum;
 
@@ -23,13 +26,20 @@ namespace MgBall
         void tickEvent() override;
         void drawEvent() override;
 
+        void viewportEvent(ViewportEvent& event) override;
+
         void mousePressEvent(MouseEvent& event) override;
         void mouseReleaseEvent(MouseEvent& event) override;
         void mouseMoveEvent(MouseMoveEvent& event) override;
+        void mouseScrollEvent(MouseScrollEvent& event) override;
+
+        void textInputEvent(TextInputEvent& event) override;
+
         void keyPressEvent(KeyEvent& event) override;
         void keyReleaseEvent(KeyEvent& event) override;
 
         MainContext m_mainContext{};
+        ImGuiIntegration::Context m_imgui{NoCreate};
 
         TextureExample m_textureExample{};
         PrimitivesExample _primitivesExample{};
@@ -42,6 +52,9 @@ namespace MgBall
 
         GL::Renderer::setClearColor(0xf8f5e6_rgbf);
         m_mainContext.SceneFrameBuffer().setViewport(Range2Di({0, 0}, ConstParam::SceneSize));
+
+        m_imgui = ImGuiIntegration::Context(
+            Vector2(ConstParam::SceneSize), windowSize(), framebufferSize());
 
         // entry point
         m_mainContext.Scenes().gamingScene = m_mainContext.GetActorManager().BirthAs(new Gaming::GamingScene());
@@ -67,14 +80,14 @@ namespace MgBall
             .clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth)
             .bind();
 
+        GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
+        m_mainContext.GetActorManager().Draw({sceneFrameBuffer});
+
         _primitivesExample.drawEvent();
 
         GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
         m_textureExample.drawEvent(sceneFrameBuffer);
-        GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
-
-        m_mainContext.GetActorManager().Draw({sceneFrameBuffer});
-
+        
         // defaultFramebufferへ書き込み
         GL::defaultFramebuffer
             .clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth)
@@ -84,36 +97,80 @@ namespace MgBall
             {{}, ConstParam::SceneSize}, {{}, windowSize()},
             GL::FramebufferBlit::Color, GL::FramebufferBlitFilter::Linear);
 
+        GL::Renderer::enable(GL::Renderer::Feature::Blending);
+        GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+        GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+        GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
+        m_imgui.newFrame();
+        
+        ImGui::Text("Hello, world!");
+        
+        m_imgui.drawFrame();
+
+        GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
+        GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
+
         swapBuffers();
+    }
+
+    void MainApp::viewportEvent(ViewportEvent& event)
+    {
+        m_imgui.relayout(Vector2{event.windowSize()} / event.dpiScaling(),
+                         event.windowSize(), event.framebufferSize());
     }
 
     void MainApp::mousePressEvent(MouseEvent& event)
     {
+        if (m_imgui.handleMousePressEvent(event)) return;
+
         event.setAccepted();
     }
 
     void MainApp::mouseReleaseEvent(MouseEvent& event)
     {
+        if (m_imgui.handleMouseReleaseEvent(event)) return;
+
         _primitivesExample.mouseReleaseEvent();
         event.setAccepted();
     }
 
     void MainApp::mouseMoveEvent(MouseMoveEvent& event)
     {
+        if (m_imgui.handleMouseMoveEvent(event)) return;
+
         _primitivesExample.mouseMoveEvent(3.0f * Vector2{event.relativePosition()} / Vector2{windowSize()});
 
         redraw();
         event.setAccepted();
     }
 
+    void MainApp::mouseScrollEvent(MouseScrollEvent& event)
+    {
+        if (m_imgui.handleMouseScrollEvent(event))
+        {
+            /* Prevent scrolling the page */
+            event.setAccepted();
+            return;
+        }
+    }
+
+    void MainApp::textInputEvent(TextInputEvent& event)
+    {
+        if (m_imgui.handleTextInputEvent(event)) return;
+    }
+
     void MainApp::keyPressEvent(KeyEvent& event)
     {
+        if (m_imgui.handleKeyPressEvent(event)) return;
+
         m_mainContext.GetMainInput().OnKeyPress(event);
         event.setAccepted();
     }
 
     void MainApp::keyReleaseEvent(KeyEvent& event)
     {
+        if (m_imgui.handleKeyReleaseEvent(event)) return;
+
         m_mainContext.GetMainInput().OnKeyRelease(event);
         event.setAccepted();
     }

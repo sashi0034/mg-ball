@@ -33,10 +33,10 @@ namespace MgBall
         MainContext();
         ~MainContext();
 
-        // MainContext(const MainContext&) = delete;
-        // MainContext(MainContext&&) = delete;
-        // MainContext& operator=(const MainContext&) { return *this; }
-        // MainContext& operator=(MainContext&&) noexcept { return *this; }
+        MainContext(const MainContext&) = delete;
+        MainContext(MainContext&&) = delete;
+        MainContext& operator=(const MainContext&) { return *this; }
+        MainContext& operator=(MainContext&&) noexcept { return *this; }
     private:
         class Impl; // @formatter:off
         struct ImplPtr : std::unique_ptr<Impl> { ~ImplPtr(); } m_impl; // @formatter:on
