@@ -6,6 +6,8 @@
 #include <Magnum/Trade/ImageData.h>
 
 #include "ConstParam.h"
+#include "Shaders/BasicShader.h"
+#include "Shaders/TextureShader.h"
 
 namespace Magnum
 {
@@ -20,6 +22,12 @@ namespace MgBall
     using namespace Corrade;
     using namespace Magnum;
 
+    struct ShaderResource
+    {
+        Shaders::BasicShader basicShader{};
+        Shaders::TextureShader textureShader{};
+    };
+
     struct ImageResource
     {
         Containers::Optional<Trade::ImageData2D> beatrice_32x32;
@@ -32,6 +40,7 @@ namespace MgBall
         MainRsc();
 
         ImageResource& Images() { return m_images; }
+        ShaderResource& Shaders() { return m_shaders; }
 
     private:
         Utility::Resource m_resource{ConstParam::RscMgBall};
@@ -39,6 +48,7 @@ namespace MgBall
         Containers::Pointer<Trade::AbstractImporter> m_pngImporter;
 
         ImageResource m_images{};
+        ShaderResource m_shaders{};
 
         void loadPng(Containers::Optional<Trade::ImageData2D>* out, const std::string& fileName);
     };
