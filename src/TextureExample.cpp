@@ -83,10 +83,10 @@ namespace MgBall
                  .setSubImage(0, {}, *textureImage);
     }
 
-    void TextureExample::drawEvent()
+    void TextureExample::drawEvent(const GL::AbstractFramebuffer& frameBuffer)
     {
         m_shader
-            .setScreenSize(Vector2(GL::defaultFramebuffer.viewport().size()))
+            .setScreenSize(Vector2(frameBuffer.viewport().size()))
             .bindTexture(m_texture)
             .draw(m_mesh);
     }

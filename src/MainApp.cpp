@@ -7,12 +7,13 @@
 #include "TexturedQuadExample.h"
 #include "TextureExample.h"
 #include "Corrade/Utility/Path.h"
+#include "Magnum/GL/Framebuffer.h"
 
 using namespace Magnum;
 
 namespace MgBall
 {
-    class MainApp : public Platform::Application
+    class MainApp : public Application
     {
     public:
         virtual ~MainApp() = default;
@@ -31,15 +32,16 @@ namespace MgBall
         MainContext m_mainContext{};
 
         TextureExample m_textureExample;
-        PrimitivesExample _primitivesExample;
+        PrimitivesExample _primitivesExample{Vector2{windowSize()}};
     };
 
-    MainApp::MainApp(const Arguments& arguments): Platform::Application{arguments}
+    MainApp::MainApp(const Arguments& arguments): Application{arguments}
     {
-        m_textureExample = TextureExample{};
-        _primitivesExample = PrimitivesExample{Vector2{windowSize()}};
+        SDL_SetWindowSize(window(), 1280, 720);
+        GL::defaultFramebuffer.setViewport(Range2Di({0, 0}, windowSize()));
 
         GL::Renderer::setClearColor(0xf8f5e6_rgbf);
+        m_mainContext.SceneFrameBuffer().setViewport(Range2Di({0, 0}, ConstParam::SceneSize));
     }
 
     void MainApp::tickEvent()
@@ -54,14 +56,27 @@ namespace MgBall
         GL::Renderer::enable(GL::Renderer::Feature::Blending);
         GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
                                        GL::Renderer::BlendFunction::OneMinusSourceAlpha);
-        GL::defaultFramebuffer.clearDepth(1.0f);
-        GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
+
+        auto&& sceneFrameBuffer = m_mainContext.SceneFrameBuffer();
+        sceneFrameBuffer
+            .clearDepth(1.0f)
+            .clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth)
+            .bind();
 
         _primitivesExample.drawEvent();
 
         GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
-        m_textureExample.drawEvent();
+        m_textureExample.drawEvent(sceneFrameBuffer);
         GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
+
+        // defaultFramebufferへ書き込み
+        GL::defaultFramebuffer
+            .clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth)
+            .bind();
+        GL::Framebuffer::blit(
+            sceneFrameBuffer, GL::defaultFramebuffer,
+            {{}, ConstParam::SceneSize}, {{}, windowSize()},
+            GL::FramebufferBlit::Color, GL::FramebufferBlitFilter::Linear);
 
         swapBuffers();
     }

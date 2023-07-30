@@ -21,5 +21,7 @@ namespace MgBall
     namespace ConstParam
     {
         constexpr ConstStr RscMgBall{"MgBall"};
+
+        constexpr Magnum::Vector2i SceneSize{1920, 1080};
     }
 }

@@ -41,6 +41,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
     <Corrade/Containers/StringView.h>
     <Corrade/PluginManager/Manager.h>
     <Corrade/Utility/Resource.h>
+    <Magnum/GL/AbstractShaderProgram.h>
     <Magnum/GL/Buffer.h>
     <Magnum/GL/Mesh.h>
     <Magnum/GL/Texture.h>

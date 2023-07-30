@@ -17,7 +17,7 @@ namespace MgBall
     {
     public:
         explicit TextureExample();
-        void drawEvent();
+        void drawEvent(const GL::AbstractFramebuffer& frameBuffer);
         void tickEvent();
     private:
         struct InstanceData
