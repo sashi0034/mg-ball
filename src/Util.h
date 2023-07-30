@@ -1,8 +1,25 @@
 ﻿#pragma once
 #include <random>
 
+#include "ConstParam.h"
+
 namespace MgBall::Util
 {
+    constexpr std::string DebugTag(const std::string& tag)
+    {
+        return tag + " (debug)";
+    }
+
+    constexpr float RadToDeg(float rad)
+    {
+        return rad * (180.0f / ConstParam::Pi);
+    }
+
+    constexpr float DegToRad(float deg)
+    {
+        return deg * (ConstParam::Pi / 180.0f);
+    }
+
     class Random
     {
     public:

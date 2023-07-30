@@ -4,6 +4,7 @@
 
 #include "GamingScene.h"
 #include "../MainRsc.h"
+#include "../Util.h"
 #include "../Shaders/BasicShader.h"
 
 using namespace MgBall::Shaders;
@@ -79,10 +80,13 @@ namespace MgBall::Gaming
 
     void Plain::DrawGui(const DrawingContext& context)
     {
-        ImGui::Text("Hello, world!");
+        ImGui::SetNextWindowSize(ConstParam::Gui_256_224, ImGuiCond_Appearing);
+        ImGui::Begin(Util::DebugTag("Plain").c_str());
+        ImGui::Text("Parameters");
         if (ImGui::SliderFloat("m_posY", &m_posY, -2.0f, 0.0f))
         {
             m_transform.translation() = {0, m_posY, 0};
         }
+        ImGui::End();
     }
 }

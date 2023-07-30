@@ -51,6 +51,8 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
     <Magnum/Math/Matrix4.h>
     <Magnum/Trade/AbstractImporter.h>
     <Magnum/Trade/ImageData.h>
+    
+    <imgui.h>
 )
  
 install(TARGETS ${PROJECT_NAME} DESTINATION ${MAGNUM_BINARY_INSTALL_DIR})
