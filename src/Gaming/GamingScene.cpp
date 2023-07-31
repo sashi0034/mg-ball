@@ -1,6 +1,7 @@
 ﻿#include "GamingScene.h"
 
 #include "Plain.h"
+#include "PrimeBox.h"
 #include "../MainContext.h"
 
 namespace MgBall::Gaming
@@ -10,10 +11,10 @@ namespace MgBall::Gaming
     public:
         float cameraFov{35.0};
         float cameraNear{0.01f};
-        float cameraFaf{100.0f};
-        float cameraRotX{0};
-        float cameraPosY{0};
-        float cameraPosZ{-10.0f};
+        float cameraFar{100.0f};
+        float cameraRotX{18.0f};
+        float cameraPosY{-3.2f};
+        float cameraPosZ{-12.0f};
 
         Matrix4 CameraProject()
         {
@@ -21,7 +22,7 @@ namespace MgBall::Gaming
                     Rad(Util::DegToRad(cameraFov)),
                     Vector2{ConstParam::SceneSize}.aspectRatio(),
                     cameraNear,
-                    cameraFaf)
+                    cameraFar)
                 * Matrix4::rotationX(Rad(Util::DegToRad(cameraRotX)))
                 * Matrix4::translation({0, cameraPosY, cameraPosZ});
         }
@@ -38,6 +39,7 @@ namespace MgBall::Gaming
         m_impl{std::make_unique<Impl>()}
     {
         AsParent().Birth(new Plain());
+        AsParent().Birth(new PrimeBox());
 
         m_cameraProject = m_impl->CameraProject();
     }
@@ -61,11 +63,11 @@ namespace MgBall::Gaming
         ImGui::SetNextWindowSize(ConstParam::Gui_256_600, ImGuiCond_Appearing);
         ImGui::Begin(Util::DebugTag("GamingScene").c_str());
         ImGui::Text("Parameters");
-        if (ImGui::DragFloat("cameraFaf", &m_impl->cameraFov, 0.0f, 90.0f) |
-            ImGui::DragFloat("cameraNear", &m_impl->cameraNear, 0.3f) |
-            ImGui::DragFloat("cameraFaf", &m_impl->cameraFaf, 0.3f) |
-            ImGui::DragFloat("cameraRotX", &m_impl->cameraRotX, 0.3f) |
-            ImGui::DragFloat2("cameraPosYZ", &m_impl->cameraPosY/* following z */, 0.3f))
+        if (ImGui::DragFloat("cameraFov", &m_impl->cameraFov, 0.1f) |
+            ImGui::DragFloat("cameraNear", &m_impl->cameraNear, 0.1f) |
+            ImGui::DragFloat("cameraFar", &m_impl->cameraFar, 0.1f) |
+            ImGui::DragFloat("cameraRotX", &m_impl->cameraRotX, 0.1f) |
+            ImGui::DragFloat2("cameraPosYZ", &m_impl->cameraPosY /* z follows */, 0.1f))
         {
             m_cameraProject = m_impl->CameraProject();
         }

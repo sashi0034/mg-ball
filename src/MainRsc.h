@@ -32,6 +32,7 @@ namespace MgBall
     {
         Containers::Optional<Trade::ImageData2D> beatrice_32x32;
         Containers::Optional<Trade::ImageData2D> stone1;
+        Containers::Optional<Trade::ImageData2D> stone2;
     };
 
     class MainRsc

@@ -42,7 +42,6 @@ namespace MgBall
         ImGuiIntegration::Context m_imgui{NoCreate};
 
         TextureExample m_textureExample{};
-        PrimitivesExample _primitivesExample{};
     };
 
     MainApp::MainApp(const Arguments& arguments): Application{arguments}
@@ -87,8 +86,6 @@ namespace MgBall
         GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
         GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
         m_mainContext.GetActorManager().Draw3D({sceneFrameBuffer});
-
-        _primitivesExample.drawEvent();
 
         // 2D描画
         GL::Renderer::enable(GL::Renderer::Feature::Blending);
@@ -140,17 +137,14 @@ namespace MgBall
     void MainApp::mouseReleaseEvent(MouseEvent& event)
     {
         if (m_imgui.handleMouseReleaseEvent(event)) return;
-
-        _primitivesExample.mouseReleaseEvent();
+        
         event.setAccepted();
     }
 
     void MainApp::mouseMoveEvent(MouseMoveEvent& event)
     {
         if (m_imgui.handleMouseMoveEvent(event)) return;
-
-        _primitivesExample.mouseMoveEvent(3.0f * Vector2{event.relativePosition()} / Vector2{windowSize()});
-
+        
         redraw();
         event.setAccepted();
     }

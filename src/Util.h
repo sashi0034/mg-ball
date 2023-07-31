@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <random>
+#include <Magnum/Magnum.h>
 
 #include "ConstParam.h"
 
@@ -10,15 +11,23 @@ namespace MgBall::Util
         return tag + " (debug)";
     }
 
-    constexpr float RadToDeg(float rad)
+    constexpr Magnum::Deg RadToDeg(float rad)
     {
-        return rad * (180.0f / ConstParam::Pi);
+        return Magnum::Deg(rad * (180.0f / ConstParam::Pi));
     }
 
-    constexpr float DegToRad(float deg)
+    constexpr Magnum::Rad DegToRad(float deg)
     {
-        return deg * (ConstParam::Pi / 180.0f);
+        return Magnum::Rad(deg * (ConstParam::Pi / 180.0f));
     }
+
+    class EnumValue
+    {
+    public:
+        const int value;
+        explicit constexpr EnumValue(int v) : value{v} { return; }
+        operator int() const { return value; }
+    };
 
     class Random
     {
@@ -46,4 +55,5 @@ namespace MgBall::Util
 namespace MgBall
 {
     using Random = Util::Random;
+    using EnumValue = Util::EnumValue;
 }
