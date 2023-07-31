@@ -21,6 +21,19 @@ namespace MgBall::Util
         return Magnum::Rad(deg * (ConstParam::Pi / 180.0f));
     }
 
+    template <typename T>
+    constexpr T SqrtInternal(T x, T guess)
+    {
+        static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value);
+        return (guess == x / guess) ? guess : SqrtInternal<T>(x, (x / guess + guess) / 2.0);
+    }
+
+    template <typename T>
+    constexpr T Sqrt(T x)
+    {
+        return SqrtInternal<T>(x, 1.0);
+    }
+
     class EnumValue
     {
     public:
