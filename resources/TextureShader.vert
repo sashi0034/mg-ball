@@ -11,7 +11,8 @@ void main() {
     // calculate position
     vec3 transformedPos3 = instTransformMat * vec3(position, 1);
 
-    gl_Position.xy = (transformedPos3.xy / screenSize) * 2 + vec2(-1, 1);
+    gl_Position.x = -(transformedPos3.x / screenSize.x - 0.5);
+    gl_Position.y = -(transformedPos3.y / screenSize.y - 0.5);
     gl_Position.z = 0.5;
     gl_Position.w = 1;
 

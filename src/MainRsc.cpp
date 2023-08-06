@@ -18,6 +18,8 @@ namespace MgBall
         loadPng(&m_images.beatrice_32x32, "beatrice_32x32.png");
         loadPng(&m_images.stone1, "stone1.png");
         loadPng(&m_images.stone2, "stone2.png");
+        loadPng(&m_images.box_up, "box_up.png");
+        loadPng(&m_images.box_side, "box_side.png");
     }
 
     void MainRsc::loadPng(Containers::Optional<Trade::ImageData2D>* out, const std::string& fileName)

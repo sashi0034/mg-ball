@@ -5,7 +5,7 @@ namespace MgBall
 {
     struct DrawingContext
     {
-        const Magnum::GL::AbstractFramebuffer& frameBuffer;
+        Magnum::GL::AbstractFramebuffer& frameBuffer;
     };
 
     enum class DrawingOrder

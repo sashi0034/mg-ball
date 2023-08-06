@@ -18,6 +18,12 @@ namespace MgBall::Shaders
         typedef GL::Attribute<8, Matrix3x3> In_instTransformMat;
         typedef GL::Attribute<11, Vector4> In_instTexRect;
 
+        struct InstanceData
+        {
+            Matrix3 instTransformMat;
+            Vector4 instTexRect;
+        };
+
         explicit TextureShader();
 
         TextureShader& setScreenSize(const Vector2& screenSize)

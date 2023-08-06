@@ -74,31 +74,25 @@ namespace MgBall::Gaming
     }
 
     PrimeBox::PrimeBox() :
-        m_sideRotY(-45.0f),
-        m_sidePosX(1.0f + std::sqrt(2.0)),
-        m_sidePosZ(1.0f),
-        m_transformScaleX(1.0f)
+        m_boxUpTex(*MainRsc::Instance().Images().box_up),
+        m_boxSideTex(*MainRsc::Instance().Images().box_side),
+        m_renderTexture(RenderTexture({1024, 1024}))
     {
-        auto&& image = MainRsc::Instance().Images().stone2;
-        m_texture
-            .setWrapping(GL::SamplerWrapping::ClampToEdge)
-            .setMagnificationFilter(GL::SamplerFilter::Linear)
-            .setMinificationFilter(GL::SamplerFilter::Linear)
-            .setStorage(1, GL::textureFormat(image->format()), image->size())
-            .setSubImage(0, {}, *image);
-
+        m_boxUpTex.UpdateInstanceData([&](std::vector<Shaders::TextureShader::InstanceData>* data)
+        {
+            (*data)[0].instTransformMat.translation() = {512, 512}; 
+        });
+        
         // メッシュ構築
         setupMesh(m_mesh);
 
         // インスタンス設定
-        resolveSideInstanceData();
-        m_instanceData[PrimeBoxIndexes::Center] = {Matrix4::rotationY(Util::DegToRad(0))};
-
-        m_instanceBuffer.setData({m_instanceData.data(), m_instanceData.size()});
-
+        std::array<Matrix4, 1> instanceData = {Matrix4(Math::IdentityInit)};
+        GL::Buffer instanceBuffer{};
+        instanceBuffer.setData({instanceData.data(), instanceData.size()});
         m_mesh
-            .addVertexBufferInstanced(m_instanceBuffer, 1, 0, Shaders::BasicShader::In_instancedTransformMat{})
-            .setInstanceCount(m_instanceData.size());
+            .addVertexBufferInstanced(instanceBuffer, 1, 0, Shaders::BasicShader::In_instancedTransformMat{})
+            .setInstanceCount(1);
 
         // 原点設定
         resolveTransformMat();
@@ -113,31 +107,24 @@ namespace MgBall::Gaming
     {
         ActorBase::Draw3D(context);
 
+        m_renderTexture.Modify([&](const GL::AbstractFramebuffer* frameBuffer)
+        {
+            m_boxSideTex.Draw(*frameBuffer);
+            m_boxUpTex.Draw(*frameBuffer);
+        }, context.frameBuffer);
+
         MainRsc::Instance()
             .Shaders().basicShader
             .setTransformMat(m_transform)
             .setProjectMat(GamingScene::Instance().CameraProject())
-            .bindTexture(m_texture)
+            .bindTexture(m_renderTexture.Texture())
             .draw(m_mesh);
     }
 
     void PrimeBox::resolveTransformMat()
     {
-        m_transform = Matrix4::scaling({m_transformScaleX, 1, 1});
+        m_transform = Matrix4::scaling({1, 1, 1});
         m_transform.translation() = {0, m_transformPosY, m_transformPosZ};
-    }
-
-    void PrimeBox::resolveSideInstanceData()
-    {
-        m_instanceData[PrimeBoxIndexes::Left] = {
-            Matrix4::rotationY(Util::DegToRad(m_sideRotY))
-        };
-        m_instanceData[PrimeBoxIndexes::Left].transformMat.translation() = Vector3(m_sidePosX, 0, m_sidePosZ);
-
-        m_instanceData[PrimeBoxIndexes::Right] = {
-            Matrix4::rotationY(Util::DegToRad(-m_sideRotY))
-        };
-        m_instanceData[PrimeBoxIndexes::Right].transformMat.translation() = Vector3(-m_sidePosX, 0, m_sidePosZ);
     }
 
     void PrimeBox::DrawGui(const DrawingContext& context)
@@ -145,15 +132,7 @@ namespace MgBall::Gaming
         ImGui::SetNextWindowSize(ConstParam::Gui_256_224, ImGuiCond_Appearing);
         ImGui::Begin(Util::DebugTag("PrimeBox").c_str());
 
-        if (ImGui::DragFloat("m_sideRotY", &m_sideRotY, 0.5f) |
-            ImGui::DragFloat2("m_sidePosX/Z", &m_sidePosX, 0.1f))
-        {
-            resolveSideInstanceData();
-            m_instanceBuffer.setData({m_instanceData.data(), m_instanceData.size()});
-        }
-
-        if (ImGui::DragFloat("m_transformScaleX", &m_transformScaleX, 0.1f) |
-            ImGui::DragFloat("m_transformPosY", &m_transformPosY, 0.1f) |
+        if (ImGui::DragFloat("m_transformPosY", &m_transformPosY, 0.1f) |
             ImGui::DragFloat("m_transformPosZ", &m_transformPosZ, 0.1f))
         {
             resolveTransformMat();
